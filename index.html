@@ -17,12 +17,14 @@
 
       <h3 class="page-title">Publish Stremio Add-on</h3>
 
-      <form action="#" id="publishForm">
+      <form id="publishForm" action="https://api.strem.io/api/addonPublish" method="post" enctype="application/json">
 
         <div class="mdl-textfield mdl-js-textfield">
-          <input class="mdl-textfield__input" type="text" id="manifestUrl">
+          <input class="mdl-textfield__input" type="text" name="transportUrl" id="manifestUrl">
           <label class="mdl-textfield__label" for="sample1">Add-on Manifest URL</label>
         </div>
+
+        <input type="hidden" name="transportName" value="http">
 
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
           Publish
