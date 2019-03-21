@@ -4,38 +4,27 @@ const successMsg = 'Successfully published add-on, please allow up to 24 hours f
 const endpoint = 'https://api.strem.io'
 
 function publishAddon(manifestUrl) {
-  const http = new XMLHttpRequest()
+
   const apiUrl = endpoint + '/api/addonPublish'
 
   const data = JSON.stringify({ transportUrl: manifestUrl, transportName: 'http' })
 
-  http.open('POST', apiUrl, true)
-
-  http.setRequestHeader('Content-type', 'application/json')
-
-  http.onreadystatechange = function() {
-    if (http.readyState == XMLHttpRequest.DONE) {
-      if (http.status == 200) {
-        let response
-
-        try {
-          response = JSON.parse(http.responseText)
-        } catch(e) {
-          console.error(e)
-          alert('API response is not valid JSON')
-          return
-        }
-
-        if (response.error)
-          alert(response.error.message || 'Unknown API response error')
-        else
-          confirm(response.result && response.result.success ? successMsg : 'Unknown API error')
-      } else
-        alert('Error ' + http.status + ': Could not get response from API, please try again later')
-    }
-  }
-
-  http.send(data)
+  fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: data
+  })
+  .then(response => response.json())
+  .then(response => {
+      if (response.error)
+        alert(response.error.message || 'Unknown API response error')
+      else
+        confirm(response.result && response.result.success ? successMsg : 'Unknown API error')
+  })
+  .catch(err => {
+    console.error(err)
+    alert((err || {}).message || 'Could not get response from API, please try again later')
+  })
 }
 
 document.addEventListener('DOMContentLoaded', function() {
